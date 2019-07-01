@@ -1,0 +1,13 @@
+{
+    "name": "leaf-detective",
+    "version": "0.0.0",
+    "description": "A simple AI library",
+    "main": "index.js",
+    "scripts": {},
+    "keywords": [
+        "ai",
+        "ml"
+    ],
+    "author": "Ulysse McConnell",
+    "license": "MIT"
+}
