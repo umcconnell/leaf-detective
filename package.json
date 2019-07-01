@@ -12,6 +12,10 @@
     ],
     "author": "Ulysse McConnell",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/umcconnell/leaf-detective.git"
+    },
     "devDependencies": {
         "jsdoc": "^3.6.2",
         "minami": "^1.2.3"
