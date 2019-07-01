@@ -3,7 +3,9 @@
     "version": "0.0.0",
     "description": "A simple AI library",
     "main": "index.js",
-    "scripts": {},
+    "scripts": {
+        "docs": "./node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
+    },
     "keywords": [
         "ai",
         "ml"
