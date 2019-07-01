@@ -9,5 +9,9 @@
         "ml"
     ],
     "author": "Ulysse McConnell",
-    "license": "MIT"
+    "license": "MIT",
+    "devDependencies": {
+        "jsdoc": "^3.6.2",
+        "minami": "^1.2.3"
+    }
 }
