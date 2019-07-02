@@ -1,6 +1,6 @@
 # leaf-detective
 
-A simple js AI library
+A simple js AI library.
 
 ## Table of Contents
 
@@ -51,6 +51,9 @@ npm install
 ## About
 
 ## Docs
+
+See https://umcconnell.github.io/leaf-detective for more information about
+program internals and examples.
 
 ## Built With
 
