@@ -19,5 +19,8 @@
     "devDependencies": {
         "jsdoc": "^3.6.2",
         "minami": "^1.2.3"
+    },
+    "dependencies": {
+        "esm": "^3.2.25"
     }
 }
