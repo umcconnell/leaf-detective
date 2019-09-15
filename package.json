@@ -4,7 +4,7 @@
     "description": "A simple AI library",
     "main": "index.js",
     "scripts": {
-        "docs": "rm -rf ./docs && ././node_modules/.bin/jsdoc --configure .jsdoc.json --verbose && mv ./docs/leaf-detective/**/* ./docs/"
+        "docs": "rm -rf ./docs && ./node_modules/.bin/jsdoc --configure .jsdoc.json --verbose && mv ./docs/leaf-detective/**/* ./docs/"
     },
     "keywords": [
         "ai",
