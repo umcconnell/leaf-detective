@@ -7,6 +7,7 @@ A simple js AI library.
 -   [Getting Started](#getting-started)
     -   [Prerequisites](#prerequisites)
     -   [Installing](#installing)
+    -   [Running](#running)
 -   [Examples](#examples)
 -   [About](#about)
 -   [Docs](#docs)
@@ -44,6 +45,14 @@ And install npm dependencies
 
 ```bash
 npm install
+```
+
+### Running
+
+To run any file, type:
+
+```bash
+node -r esm path/to/file.js
 ```
 
 ## Examples
