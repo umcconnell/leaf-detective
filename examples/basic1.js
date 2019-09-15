@@ -9,6 +9,8 @@ supposed to return the 1st value.
 ################
 `);
 
+let t0 = new Date().getTime();
+
 // 1. Create network
 let network = new Network([3, 3, 3, 1])
     .connect()
@@ -44,7 +46,10 @@ data.forEach(train => {
     }
 });
 
+let t1 = new Date().getTime();
+
 console.log("Done Training");
+console.log(`Took ${t1 - t0} milliseconds`);
 console.log("-------------");
 
 // 4. Test network
