@@ -1,5 +1,5 @@
 let { Network } = require("../lib/index.js");
-let { sigmoid, plus } = require("../lib/helpers.js");
+let { plus } = require("../lib/helpers.js");
 
 console.log(`Basic Example 1:
 ################
@@ -40,7 +40,7 @@ console.log("Training neural network...");
 data.forEach(train => {
     network.populate(train.input);
     for (let i = 0; i < 50; i++) {
-        network.run(sigmoid).backpropagate([train.expected], 0.8, 1);
+        network.run().backpropagate([train.expected], 0.8, 1);
     }
 });
 
@@ -52,7 +52,7 @@ console.log("Testing neural network...");
 console.log(
     `Average error: ${testData
         .map(train => {
-            network.populate(train.input).run(sigmoid);
+            network.populate(train.input).run();
 
             let actual = network[network.length - 1].neurons[0],
                 diff = Math.abs(train.expected - actual);
