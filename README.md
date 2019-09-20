@@ -94,4 +94,6 @@ This project is licensed under the MIT License - see the
 
 ## Acknowledgments
 
+-   https://inst.eecs.berkeley.edu/~cs182/sp06/notes/backprop.pdf
+
 ## See Also
