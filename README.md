@@ -1,5 +1,7 @@
 # leaf-detective
 
+:construction: This is an experimental project!
+
 A simple js AI library.
 
 ## Table of Contents
