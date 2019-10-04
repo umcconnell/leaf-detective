@@ -1,5 +1,7 @@
 let { Network } = require("../lib/index.js");
-let { plus } = require("../lib/helpers.js");
+let { plus, shuffle } = require("../lib/helpers.js");
+
+const NORMALIZER = 212;
 
 console.log(`Celsius to Fahrenheit conversion:
 ################
@@ -18,28 +20,30 @@ let network = new Network([1, 4, 2, 1])
     .addBiases();
 
 // 2. Generate Data
-let data = new Array(1000).fill(0).map(_ => {
+let data = new Array(600).fill(0).map(_ => {
     let celsius = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
 
     //  Normalize temperature by dividing by 212
     // (highest possible temperature = 100°C = 212°F)
     return {
-        input: [celsius / 212],
-        expected: (celsius * 1.8 + 32) / 212
+        input: [celsius / NORMALIZER],
+        expected: (celsius * 1.8 + 32) / NORMALIZER
     };
 });
 
-const testData = data.splice(800, 200);
+const testData = data.splice(550, 50);
 
 // 3. Train network
 console.log("Training neural network...");
 
-data.forEach(train => {
-    network.populate(train.input);
-    for (let i = 0; i < 1000; i++) {
-        network.run().backpropagate([train.expected], 0.01, 1);
-    }
-});
+for (let i = 0; i < 800; i++) {
+    shuffle(data).forEach(train =>
+        network
+            .populate(train.input)
+            .run()
+            .backpropagate([train.expected], 0.3, 1)
+    );
+}
 
 let t1 = new Date().getTime();
 
@@ -50,14 +54,23 @@ console.log("-------------");
 // 4. Test network
 console.log("Testing neural network...");
 console.log(
-    `Average error: ${testData
-        .map(train => {
-            network.populate(train.input).run();
+    "========================\n" +
+        `Average error: ${testData
+            .map(train => {
+                network.populate(train.input).run();
 
-            let actual = network[network.length - 1].neurons[0],
-                diff = Math.abs(train.expected - actual) * 212;
+                let actual = network[network.length - 1].neurons[0],
+                    diff = Math.abs(train.expected - actual) * NORMALIZER;
 
-            return diff;
-        })
-        .reduce(plus, 0) / testData.length}`
+                console.log(
+                    `Converted ${train.input * NORMALIZER}°C to ${(
+                        actual * NORMALIZER
+                    ).toFixed(2)}°F instead of ${(
+                        train.expected * NORMALIZER
+                    ).toFixed(2)}°F`
+                );
+
+                return diff;
+            })
+            .reduce(plus, 0) / testData.length}`
 );
