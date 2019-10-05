@@ -99,3 +99,5 @@ This project is licensed under the MIT License - see the
 -   https://inst.eecs.berkeley.edu/~cs182/sp06/notes/backprop.pdf
 
 ## See Also
+
+-   https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
