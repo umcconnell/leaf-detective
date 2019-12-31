@@ -101,3 +101,4 @@ This project is licensed under the MIT License - see the
 ## See Also
 
 -   https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
+-   https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi
