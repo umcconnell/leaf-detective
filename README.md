@@ -97,6 +97,7 @@ This project is licensed under the MIT License - see the
 ## Acknowledgments
 
 -   https://inst.eecs.berkeley.edu/~cs182/sp06/notes/backprop.pdf
+-   https://stackoverflow.com/questions/3775032/how-to-update-the-bias-in-neural-network-backpropagation
 
 ## See Also
 
