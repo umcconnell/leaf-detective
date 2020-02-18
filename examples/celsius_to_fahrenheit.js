@@ -1,5 +1,6 @@
 let { Network } = require("../lib/index.js");
 let { plus, shuffle } = require("../lib/helpers.js");
+let { relu } = require("../lib/activations.js");
 
 const NORMALIZER = 212;
 
@@ -14,7 +15,7 @@ the corresponding temperature in degrees fahrenheit.
 let t0 = new Date().getTime();
 
 // 1. Create network
-let network = new Network([1, 4, 2, 1])
+let network = new Network([1, 4, 2, 1], relu)
     .connect()
     .addWeights()
     .addBiases();
@@ -41,7 +42,7 @@ for (let i = 0; i < 800; i++) {
         network
             .populate(train.input)
             .run()
-            .backpropagate([train.expected], 0.3, 1)
+            .backpropagate([train.expected], 0.1, 1)
     );
 }
 
