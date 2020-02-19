@@ -41,7 +41,8 @@
         <article>
             <pre class="prettyprint source linenums"><code>/** @module leaf-detective/main */
 
-import { plus, sigmoid } from "./helpers.js";
+import { plus } from "./helpers.js";
+import { sigmoid } from "./activations.js";
 
 /**
  * Class representing layer weights
@@ -120,8 +121,8 @@ export class Biases extends Array {
  * @constructor
  * @example
  * // Import constructors and helpers
- * import { Layer, Weights, Biases } from "./index.js";
- * import { sigmoid } from "./helpers.js";
+ * import { Layer, Weights, Biases } from "lib/index.js";
+ * import { sigmoid } from "lib/activations.js";
  *
  * // Create Layers
  * let inputLayer = new Layer(5);
@@ -146,6 +147,7 @@ export class Layer {
      */
     constructor(length) {
         this.neurons = new Array(length).fill(0);
+        this.rawNeurons = new Array(length).fill(0);
         this.length = length;
 
         this.weights = null;
@@ -200,11 +202,15 @@ export class Layer {
      * @param {Function} activation mapping activation function called with
      * neuron value an index
      * @example
+     * import { sigmoid } from "lib/activations.js"
+     *
      * outputLayer.apply(sigmoid);
      * @returns {Layer}
      */
     apply(activation) {
-        this.neurons = this.neurons.map((neuron, i) => activation(neuron, i));
+        this.neurons = this.rawNeurons.map((neuron, i) =>
+            activation.source(neuron, i)
+        );
         return this;
     }
 
@@ -251,7 +257,7 @@ export class Layer {
      * @returns {Layer} connected output layer
      */
     run() {
-        this.next.neurons = this.next.neurons
+        this.next.rawNeurons = this.next.rawNeurons
             .map((_, row) =>
                 this.neurons
                     .map((neuron, col) => neuron * this.weights[row][col])
@@ -268,10 +274,11 @@ export class Layer {
  * @constructor
  * @example
  * // Import Constructors and helpers
- * import { Network, Layer, Weights, Biases } from "./index.js";
+ * import { Network } from "lib/index.js";
+ * import { gaussian } from "lib/activations.js";
  *
  * // Create network
- * let network = new Network([2048, 1024, 512, 256]);
+ * let network = new Network([2048, 1024, 512, 256], gaussian);
  * // Run network
  * network
  *   .addWeights()
@@ -285,8 +292,14 @@ export class Network extends Array {
      * @param {Array} layers array of Layer objects or numbers representing
      * layer length
      */
-    constructor(layers) {
+    constructor(layers, activation = sigmoid) {
+        if (!(activation.source &amp;&amp; activation.derivative))
+            throw new Error(
+                "Activation function must have a source and an derivative"
+            );
+
         super(...layers.map(el => (el instanceof Layer ? el : new Layer(el))));
+        this.activation = activation;
     }
 
     /**
@@ -336,7 +349,8 @@ export class Network extends Array {
      */
     run() {
         this.forEach(
-            layer => layer.next &amp;&amp; layer.run() &amp;&amp; layer.next.apply(sigmoid)
+            layer =>
+                layer.next &amp;&amp; layer.run() &amp;&amp; layer.next.apply(this.activation)
         );
         return this;
     }
@@ -358,18 +372,28 @@ export class Network extends Array {
     backpropagate(targets, learningRate = 0.5, momentum = Math.random()) {
         let deltas = this.calculateDeltas(targets);
 
-        for (let currLayer = 0; currLayer &lt; this.length - 1; currLayer++) {
+        for (let currLayer = 0; currLayer &lt; this.length; currLayer++) {
             const layer = this[currLayer];
 
-            layer.weights = layer.weights.map((weightsRow, output) =>
-                weightsRow.map(
-                    (weight, input) =>
-                        learningRate *
-                            deltas[currLayer + 1][output] *
-                            layer.neurons[input] +
-                        momentum * weight
-                )
-            );
+            if (currLayer &lt; this.length - 1) {
+                layer.weights = layer.weights.map((weightsRow, output) =>
+                    weightsRow.map(
+                        (weight, input) =>
+                            learningRate *
+                                deltas[currLayer + 1][output] *
+                                layer.neurons[input] +
+                            momentum * weight
+                    )
+                );
+            }
+
+            if (currLayer > 0) {
+                layer.biases = layer.biases.map(
+                    (bias, index) =>
+                        learningRate * deltas[currLayer][index] +
+                        momentum * bias
+                );
+            }
         }
 
         return this;
@@ -389,31 +413,29 @@ export class Network extends Array {
             .map((_, layer) => new Array(this[layer].length).fill(0));
 
         for (let currLayer = this.length - 1; currLayer > 0; currLayer--) {
-            const layer = this[currLayer].neurons;
+            const layer = this[currLayer];
 
             deltas[currLayer] = deltas[currLayer].map((_, currNeuron) => {
                 // Calculate delta for output layer
                 if (currLayer === this.length - 1) {
                     return (
-                        (targets[currNeuron] - layer[currNeuron]) *
-                        layer[currNeuron] *
-                        (1 - layer[currNeuron])
+                        (targets[currNeuron] - layer.neurons[currNeuron]) *
+                        this.activation.derivative(layer.rawNeurons[currNeuron])
                     );
                 }
                 // Calculate delta for hidden layer
                 else {
-                    const previousLayer = this[currLayer + 1].neurons;
+                    const previousLayer = this[currLayer + 1];
 
                     return (
-                        previousLayer
+                        previousLayer.neurons
                             .map(
                                 (_, index) =>
                                     deltas[currLayer + 1][index] *
                                     this[currLayer].weights[index][currNeuron]
                             )
                             .reduce(plus, 0) *
-                        layer[currNeuron] *
-                        (1 - layer[currNeuron])
+                        this.activation.derivative(layer.rawNeurons[currNeuron])
                     );
                 }
             });
@@ -455,7 +477,7 @@ export class Network extends Array {
 <br class="clear">
 
 <footer>
-    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Tue Dec 31 2019 17:49:23 GMT+0100 (Central European Standard Time) using the Minami theme.
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Wed Feb 19 2020 15:12:17 GMT+0100 (Central European Standard Time) using the Minami theme.
 </footer>
 
 <script>prettyPrint();</script>
