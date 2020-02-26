@@ -57,9 +57,7 @@ console.log("Testing neural network...");
 console.log(
     `Average error: ${testData
         .map(train => {
-            network.populate(train.input).run();
-
-            let actual = network[network.length - 1].neurons[0],
+            let actual = network.predict(train.input)[0],
                 diff = Math.abs(train.expected - actual);
 
             return diff;
