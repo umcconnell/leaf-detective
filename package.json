@@ -17,7 +17,7 @@
         "url": "git+https://github.com/umcconnell/leaf-detective.git"
     },
     "devDependencies": {
-        "jsdoc": "^3.6.4",
+        "jsdoc": "^3.6.5",
         "minami": "^1.2.3"
     },
     "dependencies": {
