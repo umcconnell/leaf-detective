@@ -60,7 +60,7 @@ node -r esm path/to/file.js
 ## Examples
 
 To run the provided examples, follow the installation steps outlined in the
-[leaf-detective-examples](https://github.com/umcconnell/leaf-detective-examples)
+[leaf-detective-examples](https://github.com/umcconnell/leaf-detective-examples#initial-setup)
 repo to initialize the git submodule.
 
 ## About
